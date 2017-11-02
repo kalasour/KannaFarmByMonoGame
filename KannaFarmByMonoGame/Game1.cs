@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Timers;
 
 namespace KannaFarmByMonoGame
 {
@@ -11,6 +13,16 @@ namespace KannaFarmByMonoGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        bool SpriteGirl = false;
+        Texture2D Logo;
+        Texture2D Background;
+        Vector2 GirlPos;
+        public Vector2 ScreenSize = new Vector2(1366, 768);
+        Vector2 toMouse = new Vector2(0, 0);
+        Texture2D cursor;
+        bool IsSpace = false, CanChange = true;
+        Timer cooldown;
+        int speed = 5;
 
         public Game1()
         {
@@ -26,7 +38,13 @@ namespace KannaFarmByMonoGame
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            graphics.PreferredBackBufferHeight = (int)ScreenSize.Y;
+            graphics.PreferredBackBufferWidth = (int)ScreenSize.X;
+            graphics.ApplyChanges();
+            this.IsMouseVisible = false;
+            cooldown = new Timer(150);
+            cooldown.Enabled = false;
+            cooldown.Elapsed += CoolDown;
 
             base.Initialize();
         }
@@ -78,6 +96,13 @@ namespace KannaFarmByMonoGame
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+        }
+
+        //ToAdd coodown in any button.
+        protected void CoolDown(Object source, ElapsedEventArgs e)
+        {
+            CanChange = true;
+            cooldown.Enabled = false;
         }
     }
 }
