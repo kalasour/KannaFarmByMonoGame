@@ -13,23 +13,26 @@ namespace KannaFarmByMonoGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        bool SpriteGirl = false;
-        Texture2D Logo;
-        Texture2D Background;
-        Vector2 GirlPos;
         public Vector2 ScreenSize = new Vector2(1366, 768);
         Vector2 toMouse = new Vector2(0, 0);
         Texture2D cursor;
-        bool IsSpace = false, CanChange = true;
+        bool  CanChange = true;
         Timer cooldown;
         int speed = 5;
+        int GameSence=1;
+        BackgroundScreen BackgroundScreen;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
-
+        //ToAdd coodown in any button.
+        protected void CoolDown(Object source, ElapsedEventArgs e)
+        {
+            CanChange = true;
+            cooldown.Enabled = false;
+        }
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -40,7 +43,9 @@ namespace KannaFarmByMonoGame
         {
             graphics.PreferredBackBufferHeight = (int)ScreenSize.Y;
             graphics.PreferredBackBufferWidth = (int)ScreenSize.X;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+            BackgroundScreen = new BackgroundScreen(Content,ScreenSize);
             this.IsMouseVisible = false;
             cooldown = new Timer(150);
             cooldown.Enabled = false;
@@ -55,7 +60,7 @@ namespace KannaFarmByMonoGame
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
+            cursor = Content.Load<Texture2D>("Cursor");
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
@@ -77,8 +82,29 @@ namespace KannaFarmByMonoGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) && Keyboard.GetState().IsKeyDown(Keys.F4))
                 Exit();
+            if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                if (CanChange)
+                {
+                    if (graphics.IsFullScreen)
+                    {
+                        graphics.IsFullScreen = false;
+                        graphics.ApplyChanges();
+                    }
+                    else
+                    {
+                        graphics.IsFullScreen = true;
+                        graphics.ApplyChanges();
+                    }
+
+                    CanChange = false;
+                    cooldown.Enabled = true;
+                }
+            }
+            BackgroundScreen.Update(gameTime);
+
 
             // TODO: Add your update logic here
 
@@ -92,17 +118,18 @@ namespace KannaFarmByMonoGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            switch (GameSence)
+            {
+                case 1:
+                    BackgroundScreen.Draw(spriteBatch);
+                break;
+            }
+            if(BackgroundScreen.CanEnter)spriteBatch.Draw(cursor, new Rectangle(Mouse.GetState().X, Mouse.GetState().Y, cursor.Width / 2, cursor.Height / 2), Color.White);
+            spriteBatch.End();
+            
             base.Draw(gameTime);
         }
 
-        //ToAdd coodown in any button.
-        protected void CoolDown(Object source, ElapsedEventArgs e)
-        {
-            CanChange = true;
-            cooldown.Enabled = false;
-        }
     }
 }
