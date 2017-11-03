@@ -16,10 +16,11 @@ namespace KannaFarmByMonoGame
         public Vector2 ScreenSize = new Vector2(1366, 768);
         Vector2 toMouse = new Vector2(0, 0);
         Texture2D cursor;
-        bool  CanChange = true;
-        Timer cooldown;
+        bool  CanPress = true;
         int speed = 5;
         int GameSence=1;
+        bool showMouse = false;
+        HomeFirstSence HomeFirstSence;
         BackgroundScreen BackgroundScreen;
 
         public Game1()
@@ -28,11 +29,6 @@ namespace KannaFarmByMonoGame
             Content.RootDirectory = "Content";
         }
         //ToAdd coodown in any button.
-        protected void CoolDown(Object source, ElapsedEventArgs e)
-        {
-            CanChange = true;
-            cooldown.Enabled = false;
-        }
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -45,11 +41,10 @@ namespace KannaFarmByMonoGame
             graphics.PreferredBackBufferWidth = (int)ScreenSize.X;
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+            ScreenSize = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            HomeFirstSence = new HomeFirstSence(Content, ScreenSize);
             BackgroundScreen = new BackgroundScreen(Content,ScreenSize);
             this.IsMouseVisible = false;
-            cooldown = new Timer(150);
-            cooldown.Enabled = false;
-            cooldown.Elapsed += CoolDown;
 
             base.Initialize();
         }
@@ -84,9 +79,13 @@ namespace KannaFarmByMonoGame
         {
             if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) && Keyboard.GetState().IsKeyDown(Keys.F4))
                 Exit();
+            if (Keyboard.GetState().IsKeyUp(Keys.LeftAlt) && Keyboard.GetState().IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyUp(Keys.LeftControl))
+            {
+                CanPress = true;
+            }
             if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
-                if (CanChange)
+                if (CanPress)
                 {
                     if (graphics.IsFullScreen)
                     {
@@ -99,11 +98,24 @@ namespace KannaFarmByMonoGame
                         graphics.ApplyChanges();
                     }
 
-                    CanChange = false;
-                    cooldown.Enabled = true;
+                    CanPress = false;
                 }
             }
-            BackgroundScreen.Update(gameTime);
+
+            if(Keyboard.GetState().IsKeyDown(Keys.LeftControl)&&CanPress)
+            {
+                if (showMouse) showMouse = false;
+                else showMouse = true;
+                CanPress = false;
+            }
+            if(BackgroundScreen.CanEnter&&Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                BackgroundScreen.CanEnter = false;
+                showMouse = true;
+                GameSence = 2;
+            }
+            
+            
 
 
             // TODO: Add your update logic here
@@ -123,9 +135,17 @@ namespace KannaFarmByMonoGame
             {
                 case 1:
                     BackgroundScreen.Draw(spriteBatch);
-                break;
+                    BackgroundScreen.Update(gameTime);
+                    break;
+                case 2:
+                    HomeFirstSence.Draw(spriteBatch);
+                    HomeFirstSence.Update(gameTime);
+                    break;
             }
-            if(BackgroundScreen.CanEnter)spriteBatch.Draw(cursor, new Rectangle(Mouse.GetState().X, Mouse.GetState().Y, cursor.Width / 2, cursor.Height / 2), Color.White);
+            if (showMouse)
+            {
+                spriteBatch.Draw(cursor, new Rectangle(Mouse.GetState().X, Mouse.GetState().Y, cursor.Width / 2, cursor.Height / 2), Color.White);
+            } 
             spriteBatch.End();
             
             base.Draw(gameTime);

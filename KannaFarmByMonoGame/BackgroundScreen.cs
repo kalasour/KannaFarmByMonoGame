@@ -36,7 +36,7 @@ namespace KannaFarmByMonoGame
             Cloud = Content.Load<Texture2D>("cloud_1");
             PressEnter = Content.Load<Texture2D>("PressEnterto");
             CloudPos = new Vector2(0, -Logo.Height);
-            LogoPos = new Vector2((1366 / 2) - (Logo.Width / 2), -(Logo.Height));
+            LogoPos = new Vector2((ScreenSize.X / 2) - (Logo.Width / 2), -(Logo.Height));
             CloudPosX[0] = (int)CloudPos.X;
             CloudPosX[1] = 300 + (int)CloudPos.X;
             CloudPosX[2] = 100 + (int)CloudPos.X;
@@ -62,7 +62,7 @@ namespace KannaFarmByMonoGame
                 }
                 else { CloudPosX[i] += (gameTime.ElapsedGameTime.Milliseconds / 10); }
             }
-            if (!(LogoPos.Y > (762 / 2) - (Logo.Height) + (Logo.Height / 4) + 20))
+            if (!(LogoPos.Y > (ScreenSize.Y / 2) - (Logo.Height) + (Logo.Height / 4) + 20))
             {
                 LogoPos.Y += gameTime.ElapsedGameTime.Milliseconds / 8;
                 CloudPos.Y += gameTime.ElapsedGameTime.Milliseconds / 8;
@@ -74,8 +74,8 @@ namespace KannaFarmByMonoGame
             }
             if(Keyboard.GetState().IsKeyDown(Keys.Space)||Mouse.GetState().LeftButton==ButtonState.Pressed)
             {
-                LogoPos.Y = (762 / 2) - (Logo.Height) + (Logo.Height / 4) + 20;
-                CloudPos.Y = (762 / 2) - (Logo.Height) + (Logo.Height / 4) + 20;
+                LogoPos.Y = (ScreenSize.Y / 2) - (Logo.Height) + (Logo.Height / 4) + 20-1;
+                CloudPos.Y = (ScreenSize.Y / 2) - (Logo.Height) + (Logo.Height / 4) + 20-1;
                 CanEnter = true;
                 Swap.Enabled = true;
             }
@@ -100,7 +100,7 @@ namespace KannaFarmByMonoGame
             spriteBatch.Draw(Cloud, new Rectangle(CloudPosX[6], 200 + (int)CloudPos.Y, Cloud.Width / 2, Cloud.Height / 2), Color.White);
             if (CanEnter&&SwapVa)
             {
-                spriteBatch.Draw(PressEnter, new Rectangle((int)(ScreenSize.X / 2 - PressEnter.Width / 8), 500, PressEnter.Width / 4, PressEnter.Height / 4), Color.White);
+                spriteBatch.Draw(PressEnter, new Rectangle((int)(ScreenSize.X / 2 - PressEnter.Width / 8), (int)ScreenSize.Y-(int)ScreenSize.Y/3, PressEnter.Width / 4, PressEnter.Height / 4), Color.White);
             }
         }
         private void SwapMethod(Object source, ElapsedEventArgs e)
