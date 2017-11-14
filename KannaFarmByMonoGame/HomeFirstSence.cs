@@ -25,15 +25,14 @@ namespace KannaFarmByMonoGame
         bool isAction = false;
         int MapWidth, MapHeight;
         Texture2D Character;
-        TileMapDraw Home, Layer, PlantsLayer, RainLayer;
-        Texture2D SourceTexture, PlantsTexture, RainTexture;
+        TileMapDraw Layer1,Collition,PlantsLayer, RainLayer;
+        Texture2D SourceTexture, PlantsTexture, RainTexture,CollitionTexture;
         ArrOfMap Arr = new ArrOfMap();
         Vector2 CharacterPos = new Vector2(100, 100);
         String pathWalk = "boyMove";
         String pathActions = "boyAction";
         SpriteAnimations SpriteWalks;
         SpriteAnimations SpriteAction;
-        string HomeArr;
         Vector2 posMap;
 
         public HomeFirstSence(ContentManager content, Vector2 screensize)
@@ -48,24 +47,24 @@ namespace KannaFarmByMonoGame
             Character = Content.Load<Texture2D>(pathWalk);
             SpriteWalks = new SpriteAnimations(Content, pathWalk, 4, 4, 1, 4);
             SpriteAction = new SpriteAnimations(Content, pathActions, 1, 5, 0, 5);
+            CollitionTexture = Content.Load<Texture2D>("Maps/Collition");
             SpriteWalks.isEnable = true;
-            HomeArr = Arr.firstSence();
             MapHeight = 48;
             MapWidth = 85;
             RainTime = new Timer(100);
             RainTime.Elapsed += Rainy;
             RainTime.Enabled = false;
-            SourceTexture = Content.Load<Texture2D>("Maps/Test");
+            SourceTexture = Content.Load<Texture2D>("Maps/BG");
             PlantsTexture = Content.Load<Texture2D>("Maps/Plants");
             RainTexture = Content.Load<Texture2D>("Maps/rain");
             PlantsLayer = new TileMapDraw(PlantsTexture, Arr.NullLayer(), MapWidth, MapHeight, ScreenSize);
             RainLayer = new TileMapDraw(RainTexture, Arr.NullLayer(), MapWidth, MapHeight, ScreenSize);
-            Home = new TileMapDraw(SourceTexture, HomeArr, MapWidth, MapHeight, ScreenSize);
-            Layer = new TileMapDraw(SourceTexture, Arr.LayerBackground(), MapWidth, MapHeight, ScreenSize);
+            Collition = new TileMapDraw(CollitionTexture, Arr.Collition(), MapWidth, MapHeight, ScreenSize);
+            Layer1 = new TileMapDraw(SourceTexture, Arr.Layer1(), MapWidth, MapHeight, ScreenSize);
         }
         public Vector2 getIndexPos()
         {
-            int size = Home.PixelGet();
+            int size = Collition.PixelGet();
             return new Vector2((int)((CharacterPos.X - posMap.X + SpriteWalks.SpriteWidth / 2) / size), (int)((CharacterPos.Y - posMap.Y + SpriteWalks.SpriteHeight) / size));
         }
 
@@ -117,18 +116,55 @@ namespace KannaFarmByMonoGame
             SpriteWalks.Update(gameTime);
             SpriteAction.Update(gameTime);
             RainLayer.Update(posMap);
-            Home.Update(posMap);
-            Layer.Update(posMap);
+            Collition.Update(posMap);
+            Layer1.Update(posMap);
             PlantsLayer.Update(posMap);
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            if (Keyboard.GetState().IsKeyDown(Keys.D1))
             {
-                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 1, 6, 5,HaveRain));
-                isAction = true;
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 1, 6, 5, HaveRain));
                 SpriteAction.isEnable = true;
             }
-            if (Keyboard.GetState().IsKeyUp(Keys.A))
+            if (Keyboard.GetState().IsKeyDown(Keys.D2))
             {
-                isAction = false;
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 17, 7, 5, HaveRain));
+                SpriteAction.isEnable = true;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.D3))
+            {
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 33, 6, 5, HaveRain));
+                SpriteAction.isEnable = true;
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.D4))
+            {
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 49, 7, 5, HaveRain));
+                SpriteAction.isEnable = true;
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.D5))
+            {
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 65, 7, 5, HaveRain));
+                SpriteAction.isEnable = true;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.D6))
+            {
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 81, 7, 5, HaveRain));
+                SpriteAction.isEnable = true;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.D7))
+            {
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 129, 7, 5, HaveRain));
+                SpriteAction.isEnable = true;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.D8))
+            {
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 145, 7, 5, HaveRain));
+                SpriteAction.isEnable = true;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.D9))
+            {
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 57, 7, 5, HaveRain));
+                SpriteAction.isEnable = true;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.E) && PlantsLayer.CanGet[(int)getIndexPos().X, (int)getIndexPos().Y])
             {
@@ -140,7 +176,7 @@ namespace KannaFarmByMonoGame
                     CharacterPos.X -= speed;
                 else
                     posMap.X += speed;
-                if (Home.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 176 && Home.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 1953)
+                if (Collition.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 12428)
                     CharacterPos.X += speed;
 
 
@@ -151,11 +187,11 @@ namespace KannaFarmByMonoGame
             }
             else if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
-                if (CharacterPos.X < ScreenSize.X - ScreenSize.X / 3 || posMap.X < ScreenSize.X - Home.GetSize().X)
+                if (CharacterPos.X < ScreenSize.X - ScreenSize.X / 3 || posMap.X < ScreenSize.X - Collition.GetSize().X)
                     CharacterPos.X += speed;
                 else
                     posMap.X -= speed;
-                if (Home.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 176 && Home.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 1953)
+                if (Collition.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 12428)
                     CharacterPos.X -= speed;
 
 
@@ -166,11 +202,11 @@ namespace KannaFarmByMonoGame
             else if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
                 if (CharacterPos.Y + SpriteWalks.SpriteHeight >= ScreenSize.Y - 16) CharacterPos.Y -= speed;
-                if (CharacterPos.Y + SpriteWalks.SpriteHeight < ScreenSize.Y - ScreenSize.Y / 3 || posMap.Y < ScreenSize.Y - Home.GetSize().Y)
+                if (CharacterPos.Y + SpriteWalks.SpriteHeight < ScreenSize.Y - ScreenSize.Y / 3 || posMap.Y < ScreenSize.Y - Collition.GetSize().Y)
                     CharacterPos.Y += speed;
                 else
                     posMap.Y -= speed;
-                if (Home.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 176 && Home.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 1953)
+                if (Collition.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 12428)
                     CharacterPos.Y -= speed;
 
                 SpriteWalks.JustRow = 0;
@@ -184,7 +220,7 @@ namespace KannaFarmByMonoGame
                     CharacterPos.Y -= speed;
                 else
                     posMap.Y += speed;
-                if (Home.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 176 && Home.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 1953)
+                if (Collition.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 12428)
                     CharacterPos.Y += speed;
 
 
@@ -227,8 +263,8 @@ namespace KannaFarmByMonoGame
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            Layer.Draw(spriteBatch);
-            Home.Draw(spriteBatch);
+            Collition.Draw(spriteBatch);
+            Layer1.Draw(spriteBatch);
             PlantsLayer.Draw(spriteBatch);
            if(HaveRain) RainLayer.Draw(spriteBatch);
             if (isAction)
@@ -237,6 +273,8 @@ namespace KannaFarmByMonoGame
             }
             else
                 SpriteWalks.Draw(spriteBatch, CharacterPos);
+
+            if (HaveRain) RainLayer.Draw(spriteBatch);
         }
 
 
