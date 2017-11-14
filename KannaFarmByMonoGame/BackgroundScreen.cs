@@ -24,6 +24,7 @@ namespace KannaFarmByMonoGame
 
         public BackgroundScreen(ContentManager content, Vector2 screensize)
         {
+
             Content = content;
             ScreenSize = screensize;
             LoadContent();
@@ -49,7 +50,7 @@ namespace KannaFarmByMonoGame
             Swap.Elapsed += SwapMethod;
             Swap.Enabled = false;
         }
-
+        
         public void Update(GameTime gameTime)
         {
 

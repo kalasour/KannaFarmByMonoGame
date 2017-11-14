@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Xml.Linq;
 using System.Timers;
 
 namespace KannaFarmByMonoGame
@@ -13,7 +14,7 @@ namespace KannaFarmByMonoGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public Vector2 ScreenSize = new Vector2(1366, 768);
+        public Vector2 ScreenSize = new Vector2(1360, 768);
         Vector2 toMouse = new Vector2(0, 0);
         Texture2D cursor;
         bool  CanPress = true;
@@ -22,6 +23,7 @@ namespace KannaFarmByMonoGame
         bool showMouse = false;
         HomeFirstSence HomeFirstSence;
         BackgroundScreen BackgroundScreen;
+        
 
         public Game1()
         {
@@ -39,7 +41,7 @@ namespace KannaFarmByMonoGame
         {
             graphics.PreferredBackBufferHeight = (int)ScreenSize.Y;
             graphics.PreferredBackBufferWidth = (int)ScreenSize.X;
-            graphics.IsFullScreen = true;
+           // graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             ScreenSize = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             HomeFirstSence = new HomeFirstSence(Content, ScreenSize);
