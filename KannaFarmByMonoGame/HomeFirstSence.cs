@@ -28,7 +28,7 @@ namespace KannaFarmByMonoGame
         TileMapDraw Layer1,Collition,PlantsLayer, RainLayer;
         Texture2D SourceTexture, PlantsTexture, RainTexture,CollitionTexture;
         ArrOfMap Arr = new ArrOfMap();
-        Vector2 CharacterPos = new Vector2(100, 100);
+        Vector2 CharacterPos = new Vector2(1200, 100);
         String pathWalk = "boyMove";
         String pathActions = "boyAction";
         SpriteAnimations SpriteWalks;
@@ -51,7 +51,7 @@ namespace KannaFarmByMonoGame
             SpriteWalks.isEnable = true;
             MapHeight = 48;
             MapWidth = 85;
-            RainTime = new Timer(100);
+            RainTime = new Timer(50);
             RainTime.Elapsed += Rainy;
             RainTime.Enabled = false;
             SourceTexture = Content.Load<Texture2D>("Maps/BG");
@@ -176,7 +176,7 @@ namespace KannaFarmByMonoGame
                     CharacterPos.X -= speed;
                 else
                     posMap.X += speed;
-                if (Collition.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 12428)
+                if (Collition.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 0)
                     CharacterPos.X += speed;
 
 
@@ -191,7 +191,7 @@ namespace KannaFarmByMonoGame
                     CharacterPos.X += speed;
                 else
                     posMap.X -= speed;
-                if (Collition.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 12428)
+                if (Collition.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 0)
                     CharacterPos.X -= speed;
 
 
@@ -206,7 +206,7 @@ namespace KannaFarmByMonoGame
                     CharacterPos.Y += speed;
                 else
                     posMap.Y -= speed;
-                if (Collition.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 12428)
+                if (Collition.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 0)
                     CharacterPos.Y -= speed;
 
                 SpriteWalks.JustRow = 0;
@@ -220,7 +220,7 @@ namespace KannaFarmByMonoGame
                     CharacterPos.Y -= speed;
                 else
                     posMap.Y += speed;
-                if (Collition.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 12428)
+                if (Collition.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 0)
                     CharacterPos.Y += speed;
 
 
