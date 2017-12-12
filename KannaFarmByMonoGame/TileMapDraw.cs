@@ -24,6 +24,7 @@ namespace KannaFarmByMonoGame
         Vector2[] SourcePos;
         Vector2 ScreenSize;
         Vector2 TileSize;
+        private Color MyColor;
         public TileMapDraw(Texture2D texture, string file,int mapw,int maph, Vector2 screenSize)
         {
             Map = texture;
@@ -63,8 +64,9 @@ namespace KannaFarmByMonoGame
                 }
             }
         }
-        public void Update(Vector2 inputPos)
+        public void Update(GameTime gameTime,Vector2 inputPos)
         {
+            MyColor = Color.White;
             PositionMap = inputPos;
         }
 
@@ -74,7 +76,8 @@ namespace KannaFarmByMonoGame
             {
                 for (int j = 0; j < mapHeight; j++)
                 {
-                    spriteBatch.Draw(Map,new Rectangle(i*PixelMap+(int)PositionMap.X,j*PixelMap+(int)PositionMap.Y, PixelMap,PixelMap),new Rectangle(((intID[i,j]-1)%(int)TileSize.X)*16, ((intID[i, j]-1)/ (int)TileSize.X) *PixelTexture, PixelTexture, PixelTexture), Color.White);
+                    if(intID[i,j]!=0)
+                    spriteBatch.Draw(Map,new Rectangle(i*PixelMap+(int)PositionMap.X,j*PixelMap+(int)PositionMap.Y, PixelMap,PixelMap),new Rectangle(((intID[i,j]-1)%(int)TileSize.X)*16, ((intID[i, j]-1)/ (int)TileSize.X) *PixelTexture, PixelTexture, PixelTexture), MyColor);
                 }
             }
             

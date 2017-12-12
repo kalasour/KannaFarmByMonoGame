@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Xml.Linq;
-using System.Timers;
 
 namespace KannaFarmByMonoGame
 {
@@ -19,10 +16,11 @@ namespace KannaFarmByMonoGame
         Texture2D cursor;
         bool  CanPress = true;
         int speed = 5;
-        int GameSence=1;
-        bool showMouse = false;
+        public static int GameSence=1;
+        public static  bool showMouse = false;
         HomeFirstSence HomeFirstSence;
         BackgroundScreen BackgroundScreen;
+        private MenuSence menuSence;
         
 
         public Game1()
@@ -41,11 +39,12 @@ namespace KannaFarmByMonoGame
         {
             graphics.PreferredBackBufferHeight = (int)ScreenSize.Y;
             graphics.PreferredBackBufferWidth = (int)ScreenSize.X;
-           // graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             ScreenSize = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             HomeFirstSence = new HomeFirstSence(Content, ScreenSize);
             BackgroundScreen = new BackgroundScreen(Content,ScreenSize);
+            menuSence=new MenuSence(Content,ScreenSize);
             this.IsMouseVisible = false;
 
             base.Initialize();
@@ -59,7 +58,6 @@ namespace KannaFarmByMonoGame
         {
             cursor = Content.Load<Texture2D>("Cursor");
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             // TODO: use this.Content to load your game content here
         }
 
@@ -106,14 +104,13 @@ namespace KannaFarmByMonoGame
 
             if(Keyboard.GetState().IsKeyDown(Keys.LeftControl)&&CanPress)
             {
-                if (showMouse) showMouse = false;
-                else showMouse = true;
+                showMouse = !showMouse;
                 CanPress = false;
             }
             if(BackgroundScreen.CanEnter&&Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
                 BackgroundScreen.CanEnter = false;
-                showMouse = true;
+                //showMouse = true;
                 GameSence = 2;
             }
             
@@ -140,6 +137,11 @@ namespace KannaFarmByMonoGame
                     BackgroundScreen.Update(gameTime);
                     break;
                 case 2:
+                    showMouse = true;
+                    menuSence.Draw(spriteBatch);
+                    menuSence.Update(gameTime);
+                    break;
+                case 3:
                     HomeFirstSence.Draw(spriteBatch);
                     HomeFirstSence.Update(gameTime);
                     break;

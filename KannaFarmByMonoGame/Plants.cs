@@ -30,7 +30,7 @@ namespace KannaFarmByMonoGame
             timer.Enabled = true;
             
         }
-        public void Update(bool HaveRain)
+        public void  Update(bool HaveRain)
         {
             if(HaveRain)
             {

@@ -25,8 +25,8 @@ namespace KannaFarmByMonoGame
         bool isAction = false;
         int MapWidth, MapHeight;
         Texture2D Character;
-        TileMapDraw Layer1,Collition,PlantsLayer, RainLayer;
-        Texture2D SourceTexture, PlantsTexture, RainTexture,CollitionTexture;
+        TileMapDraw Layer1,Collition,PlantsLayer, RainLayer,LandLayer;
+        Texture2D SourceTexture, PlantsTexture, RainTexture,CollitionTexture,testTexture2D;
         ArrOfMap Arr = new ArrOfMap();
         Vector2 CharacterPos = new Vector2(1200, 100);
         String pathWalk = "boyMove";
@@ -57,9 +57,11 @@ namespace KannaFarmByMonoGame
             SourceTexture = Content.Load<Texture2D>("Maps/BG");
             PlantsTexture = Content.Load<Texture2D>("Maps/Plants");
             RainTexture = Content.Load<Texture2D>("Maps/rain");
+            testTexture2D = Content.Load<Texture2D>("Maps/Land");
             PlantsLayer = new TileMapDraw(PlantsTexture, Arr.NullLayer(), MapWidth, MapHeight, ScreenSize);
             RainLayer = new TileMapDraw(RainTexture, Arr.NullLayer(), MapWidth, MapHeight, ScreenSize);
             Collition = new TileMapDraw(CollitionTexture, Arr.Collition(), MapWidth, MapHeight, ScreenSize);
+            LandLayer=new TileMapDraw(testTexture2D,Arr.Land(), MapWidth, MapHeight, ScreenSize);
             Layer1 = new TileMapDraw(SourceTexture, Arr.Layer1(), MapWidth, MapHeight, ScreenSize);
         }
         public Vector2 getIndexPos()
@@ -70,6 +72,7 @@ namespace KannaFarmByMonoGame
 
         public void Update(GameTime gameTime)
         {
+
             if(Keyboard.GetState().IsKeyDown(Keys.R)&&CanChangeRain)
             {
                 if (HaveRain) HaveRain = false;
@@ -115,55 +118,56 @@ namespace KannaFarmByMonoGame
 
             SpriteWalks.Update(gameTime);
             SpriteAction.Update(gameTime);
-            RainLayer.Update(posMap);
-            Collition.Update(posMap);
-            Layer1.Update(posMap);
-            PlantsLayer.Update(posMap);
+            RainLayer.Update(gameTime,posMap);
+            Collition.Update(gameTime,posMap);
+            Layer1.Update(gameTime,posMap);
+            LandLayer.Update(gameTime,posMap);
+            PlantsLayer.Update(gameTime,posMap);
             if (Keyboard.GetState().IsKeyDown(Keys.D1))
             {
-                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 1, 6, 5, HaveRain));
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0&&LandLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 1, 6, 5, HaveRain));
                 SpriteAction.isEnable = true;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D2))
             {
-                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 17, 7, 5, HaveRain));
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0 && LandLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 17, 7, 5, HaveRain));
                 SpriteAction.isEnable = true;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D3))
             {
-                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 33, 6, 5, HaveRain));
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0 && LandLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 33, 6, 5, HaveRain));
                 SpriteAction.isEnable = true;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.D4))
             {
-                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 49, 7, 5, HaveRain));
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0 && LandLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 49, 7, 5, HaveRain));
                 SpriteAction.isEnable = true;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.D5))
             {
-                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 65, 7, 5, HaveRain));
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0 && LandLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 65, 7, 5, HaveRain));
                 SpriteAction.isEnable = true;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D6))
             {
-                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 81, 7, 5, HaveRain));
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0 && LandLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 81, 7, 5, HaveRain));
                 SpriteAction.isEnable = true;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D7))
             {
-                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 129, 7, 5, HaveRain));
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0 && LandLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 129, 7, 5, HaveRain));
                 SpriteAction.isEnable = true;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D8))
             {
-                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 145, 7, 5, HaveRain));
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0 && LandLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 145, 7, 5, HaveRain));
                 SpriteAction.isEnable = true;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D9))
             {
-                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 57, 7, 5, HaveRain));
+                if (PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0 && LandLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] != 0) StepUp.Add(new Plants(PlantsLayer, getIndexPos(), 57, 7, 5, HaveRain));
                 SpriteAction.isEnable = true;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.E) && PlantsLayer.CanGet[(int)getIndexPos().X, (int)getIndexPos().Y])
@@ -265,6 +269,7 @@ namespace KannaFarmByMonoGame
         {
             Collition.Draw(spriteBatch);
             Layer1.Draw(spriteBatch);
+            LandLayer.Draw(spriteBatch);
             PlantsLayer.Draw(spriteBatch);
            if(HaveRain) RainLayer.Draw(spriteBatch);
             if (isAction)
