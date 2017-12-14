@@ -50,6 +50,7 @@ namespace KannaFarmByMonoGame
             }
             if (BtnStartValue != -1)
             {
+                CanEsc = false;
                 Game1.GameSence = BtnStartValue;
                 GamePlaySence.pause = false;
             }

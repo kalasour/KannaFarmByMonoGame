@@ -30,15 +30,15 @@ namespace KannaFarmByMonoGame
         int MapWidth, MapHeight;
         Texture2D Character;
         TileMapDraw Layer1,Collition,PlantsLayer, RainLayer, LandLayer, LandLayer2;
-        Texture2D SourceTexture, PlantsTexture, RainTexture,CollitionTexture, testTexture2D, testTexture2D2,DailBox;
+        Texture2D SourceTexture, PlantsTexture, RainTexture,CollitionTexture, testTexture2D, testTexture2D2,DailBox,Status;
         ArrOfMap Arr = new ArrOfMap();
-        Vector2 CharacterPos = new Vector2(1200, 100);
+        Vector2 CharacterPos = new Vector2(1000, 100);
         String pathWalk = "boyMove";
         String pathActions = "boyAction";
         SpriteAnimations SpriteWalks;
         SpriteAnimations SpriteAction;
         Vector2 posMap;
-        private SpriteFont Fonts;
+        private SpriteFont Fonts,FontsStatus;
         int[] AmountPlants=new int[9];
 
         public GamePlaySence(ContentManager content, Vector2 screensize)
@@ -61,7 +61,8 @@ namespace KannaFarmByMonoGame
             RainTime.Elapsed += Rainy;
             RainTime.Enabled = false;
             PercentHealth = 100;
-            Coin = 100;
+            Coin = 150;
+            Status = Content.Load<Texture2D>("status");
             SourceTexture = Content.Load<Texture2D>("Maps/BG");
             PlantsTexture = Content.Load<Texture2D>("Maps/Plants");
             RainTexture = Content.Load<Texture2D>("Maps/rain");
@@ -69,6 +70,7 @@ namespace KannaFarmByMonoGame
             testTexture2D2= Content.Load<Texture2D>("Maps/BadLand");
             DailBox = Content.Load<Texture2D>("DialogBox");
             Fonts = Content.Load<SpriteFont>("Fonts");
+            FontsStatus = Content.Load<SpriteFont>("FontsStatus");
             PlantsLayer = new TileMapDraw(PlantsTexture, Arr.NullLayer(), MapWidth, MapHeight, ScreenSize);
             RainLayer = new TileMapDraw(RainTexture, Arr.NullLayer(), MapWidth, MapHeight, ScreenSize);
             Collition = new TileMapDraw(CollitionTexture, Arr.Collition(), MapWidth, MapHeight, ScreenSize);
@@ -374,10 +376,11 @@ namespace KannaFarmByMonoGame
             {
                 spriteBatch.Draw(DailBox,new Rectangle(300+83*i,600,100,100),Color.White);
                 spriteBatch.DrawString(Fonts, (i + 1).ToString(), new Vector2(325 + 83 * i, 620), Color.Black);
-                spriteBatch.DrawString(Fonts, AmountPlants[i].ToString(), new Vector2(370 + 83 * i, 660), Color.Black);
+                spriteBatch.DrawString(FontsStatus, AmountPlants[i].ToString(), new Vector2(360 + 83 * i, 660), Color.Black);
             }
-            spriteBatch.DrawString(Fonts, PercentHealth.ToString() + " %", new Vector2(1300, 50), Color.Black);
-            spriteBatch.DrawString(Fonts, Coin.ToString() + " $", new Vector2(1300, 70), Color.Black);
+            spriteBatch.Draw(Status,new Rectangle(1200,50,130,100),Color.White);
+            spriteBatch.DrawString(FontsStatus, PercentHealth.ToString() + " %", new Vector2(1260, 58), Color.SaddleBrown);
+            spriteBatch.DrawString(FontsStatus, Coin.ToString() + " $", new Vector2(1236, 116), Color.SaddleBrown);
             spriteBatch.Draw(PlantsTexture, new Rectangle(320, 615, 60, 60), new Rectangle(((6 - 1) % (int)16) * 16, ((6 - 1) / 16) * 16, 16, 16), Color.White);
             spriteBatch.Draw(PlantsTexture, new Rectangle(320+83, 605, 60, 60), new Rectangle(((23 - 1) % (int)16) * 16, ((23 - 1) / 16) * 16, 16, 16), Color.White);
             spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83*2, 615, 60, 60), new Rectangle(((38 - 1) % (int)16) * 16, ((38 - 1) / 16) * 16, 16, 16), Color.White);
