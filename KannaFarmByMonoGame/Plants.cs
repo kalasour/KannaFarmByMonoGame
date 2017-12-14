@@ -14,7 +14,7 @@ namespace KannaFarmByMonoGame
         private Vector2 IndexOfPlant;
         public Timer timer;
         TileMapDraw Map;
-        public Plants(TileMapDraw map,Vector2 index,int start,int step,int seccond,bool HaveRain)
+        public Plants(TileMapDraw map,Vector2 index,int start,int step,int seccond,bool HaveRain,int live)
         {
             map.intID[(int)index.X, (int)index.Y] = start;
             IndexOfPlant = index;
@@ -47,9 +47,16 @@ namespace KannaFarmByMonoGame
             if (Start >= End)
             {
                 timer.Enabled = false;
+                timer = null;
                 Map.CanGet[(int)IndexOfPlant.X, (int)IndexOfPlant.Y] = true;
             }
             else Start++;
+            if (Start == End)
+            {
+                timer.Enabled = false;
+                timer = null;
+                Map.CanGet[(int)IndexOfPlant.X, (int)IndexOfPlant.Y] = true;
+            }
             Map.intID[(int)IndexOfPlant.X, (int)IndexOfPlant.Y] = Start;
         }
     }

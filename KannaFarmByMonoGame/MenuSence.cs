@@ -16,8 +16,9 @@ namespace KannaFarmByMonoGame
         private ContentManager Content;
         private Vector2 ScreenSize;
         private Texture2D BackGround;
-        private Texture2D ButtonImage;
-        private SpriteButton BtnStart;
+        private Texture2D ButtonImage,ButtonExit;
+        private SpriteButton BtnStart,BtnExit;
+        private Boolean CanEsc=false;
         public MenuSence(ContentManager content,Vector2 screenSize)
         {
             Content = content;
@@ -28,19 +29,39 @@ namespace KannaFarmByMonoGame
         private void LoadContent()
         {
             BackGround = Content.Load<Texture2D>("Bg");
-            ButtonImage = Content.Load<Texture2D>("PressEnterto");
-            BtnStart=new SpriteButton(ButtonImage,new Vector2(100,50),new Vector2(200,200),ScreenSize,3);
+            ButtonImage = Content.Load<Texture2D>("BtnStart");
+            ButtonExit = Content.Load<Texture2D>("BtnExit");
+            BtnStart = new SpriteButton(ButtonImage, new Vector2(200, 100), new Vector2(ScreenSize.X / 2 - 25-200, ScreenSize.Y / 2 - 50), ScreenSize, 2);
+            BtnExit = new SpriteButton(ButtonExit, new Vector2(200, 100), new Vector2(ScreenSize.X / 2 - 25+200, ScreenSize.Y / 2 - 50), ScreenSize, 0);
         }
         public void Update(GameTime gameTime)
         {
+            int BtnStartValue = BtnStart.GetValue(), BtnExitValue = BtnExit.GetValue();
             BtnStart.Update(gameTime);
-            if(BtnStart.GetValue()!=-1)Game1.GameSence = BtnStart.GetValue();
+            if (Keyboard.GetState().IsKeyUp(Keys.Escape))
+            {
+                CanEsc = true;
+            }
+                if (Keyboard.GetState().IsKeyDown(Keys.Escape)&&CanEsc)
+                {
+                    CanEsc = false;
+                Game1.GameSence = 2;
+                GamePlaySence.pause = false;
+            }
+            if (BtnStartValue != -1)
+            {
+                Game1.GameSence = BtnStartValue;
+                GamePlaySence.pause = false;
+            }
+            BtnExit.Update(gameTime);
+            if (BtnExitValue != -1) Game1.GameSence = BtnExitValue;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(BackGround,new Rectangle(0,0,(int)ScreenSize.X,(int)ScreenSize.Y),Color.White);
             BtnStart.Draw(spriteBatch);
+            BtnExit.Draw(spriteBatch);
             
         }
     }

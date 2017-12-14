@@ -18,7 +18,7 @@ namespace KannaFarmByMonoGame
         int speed = 5;
         public static int GameSence=1;
         public static  bool showMouse = false;
-        HomeFirstSence HomeFirstSence;
+        GamePlaySence gamePlaySence;
         BackgroundScreen BackgroundScreen;
         private MenuSence menuSence;
         
@@ -39,10 +39,10 @@ namespace KannaFarmByMonoGame
         {
             graphics.PreferredBackBufferHeight = (int)ScreenSize.Y;
             graphics.PreferredBackBufferWidth = (int)ScreenSize.X;
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             ScreenSize = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-            HomeFirstSence = new HomeFirstSence(Content, ScreenSize);
+            gamePlaySence = new GamePlaySence(Content, ScreenSize);
             BackgroundScreen = new BackgroundScreen(Content,ScreenSize);
             menuSence=new MenuSence(Content,ScreenSize);
             this.IsMouseVisible = false;
@@ -137,13 +137,21 @@ namespace KannaFarmByMonoGame
                     BackgroundScreen.Update(gameTime);
                     break;
                 case 2:
+                    gamePlaySence.Draw(spriteBatch);
+                    gamePlaySence.Update(gameTime);
+                    break;
+                case 3:
                     showMouse = true;
                     menuSence.Draw(spriteBatch);
                     menuSence.Update(gameTime);
                     break;
-                case 3:
-                    HomeFirstSence.Draw(spriteBatch);
-                    HomeFirstSence.Update(gameTime);
+                
+
+
+
+
+                case 0:
+                    Exit();
                     break;
             }
             if (showMouse)

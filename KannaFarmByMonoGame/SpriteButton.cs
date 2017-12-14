@@ -51,6 +51,7 @@ namespace KannaFarmByMonoGame
             if (press&& Mouse.GetState().LeftButton != ButtonState.Pressed && new Rectangle(Mouse.GetState().X, Mouse.GetState().Y, 0, 0).Intersects(new Rectangle((int)ButtonLocation.X - (int)ButtonSize.X, (int)ButtonLocation.Y - (int)ButtonSize.Y, (int)ButtonSize.X * 2, (int)ButtonSize.Y * 2)))
             {
                 Value = Target;
+                press = false;
             }
             else if(Mouse.GetState().LeftButton != ButtonState.Pressed)
             {
@@ -61,7 +62,9 @@ namespace KannaFarmByMonoGame
 
         public int GetValue()
         {
-            return Value;
+            int temp = Value;
+            Value = -1;
+            return temp;
         }
         public void Draw(SpriteBatch spriteBatch)
         {
