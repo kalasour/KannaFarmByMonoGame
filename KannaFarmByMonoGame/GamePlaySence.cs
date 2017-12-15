@@ -13,34 +13,38 @@ namespace KannaFarmByMonoGame
 {
     public class GamePlaySence
     {
-        Plants[,] Arrplants = new Plants[85,48];
+        private Boolean RedA;
+        private int LiveDown;
+        private int time,time2;
+        private Plants[,] Arrplants;
         ContentManager Content;
         Vector2 ScreenSize;
         Timer RainTime;
-        private double PercentHealth;
+        public static double PercentHealth;
         private double Coin;
         int speed = 3;
-        bool PlantsUpdated=true;
-        bool FirstRain = true;
-        bool HaveRain = false;
-        bool CanChangeRain = true;
-        bool isAction = false;
-        private Boolean canPause=true;
-        static public Boolean pause = false;
+        private bool PlantsUpdated;
+        private bool FirstRain;
+        private bool HaveRain;
+        private bool CanChangeRain;
+        private bool isAction;
+        private Boolean canPause;
+        static public Boolean pause;
         int MapWidth, MapHeight;
+        private float colorLerp,colorLerp2;
         Texture2D Character;
         TileMapDraw Layer1,Collition,PlantsLayer, RainLayer, LandLayer, LandLayer2;
         Texture2D SourceTexture, PlantsTexture, RainTexture,CollitionTexture, testTexture2D, testTexture2D2,DailBox,Status;
-        ArrOfMap Arr = new ArrOfMap();
-        Vector2 CharacterPos = new Vector2(1000, 100);
+        private ArrOfMap Arr;
+        private Vector2 CharacterPos;
         String pathWalk = "boyMove";
         String pathActions = "boyAction";
         SpriteAnimations SpriteWalks;
         SpriteAnimations SpriteAction;
         Vector2 posMap;
         private SpriteFont Fonts,FontsStatus;
-        int[] AmountPlants=new int[9];
-
+        private int[] AmountPlants;
+        private Boolean ShowMsgTodie;
         public GamePlaySence(ContentManager content, Vector2 screensize)
         {
             Content = content;
@@ -49,17 +53,35 @@ namespace KannaFarmByMonoGame
         }
         public void LoadContent()
         {
+            Arr = new ArrOfMap();
+            AmountPlants = new int[9];
+            time = 0;
+            time2 = 0;
+            RedA = false;
+            LiveDown = 15000;
+            colorLerp = 0;
+            colorLerp2 = 0;
+            canPause = true;
+            PlantsUpdated = true;
+            Arrplants = new Plants[85, 48];
+            CharacterPos = new Vector2(1000, 100);
             posMap = new Vector2(0, 0);
+            FirstRain = true;
             Character = Content.Load<Texture2D>(pathWalk);
             SpriteWalks = new SpriteAnimations(Content, pathWalk, 4, 4, 1, 4);
             SpriteAction = new SpriteAnimations(Content, pathActions, 1, 5, 0, 5);
             CollitionTexture = Content.Load<Texture2D>("Maps/Collition");
             SpriteWalks.isEnable = true;
+            HaveRain = false;
+            pause = false;
+            isAction = false;
+            CanChangeRain = true;
             MapHeight = 48;
             MapWidth = 85;
             RainTime = new Timer(50);
             RainTime.Elapsed += Rainy;
             RainTime.Enabled = false;
+            ShowMsgTodie = false;
             PercentHealth = 100;
             Coin = 150;
             Status = Content.Load<Texture2D>("status");
@@ -113,8 +135,58 @@ namespace KannaFarmByMonoGame
            
         }
 
+        public void RedAlert(GameTime gameTime)
+        {
+            if (TileMapDraw.MyColor == Color.Red)
+            {
+                RedA = false;
+                colorLerp2 = 0;
+            }
+            if (TileMapDraw.MyColor == Color.White)
+            {
+                RedA = true;
+                colorLerp2 = 0;
+            }
+            time2 += gameTime.ElapsedGameTime.Milliseconds;
+            if (time2 >= 50)
+            {
+                time2 = 0;
+                colorLerp2=colorLerp2+(float)0.1;
+            }
+            if(RedA)TileMapDraw.MyColor = Color.Lerp(Color.White, Color.Red, colorLerp2);
+            else TileMapDraw.MyColor = Color.Lerp(Color.Red, Color.White, colorLerp2);
+        }
+
+        public void Die(GameTime gameTime)
+        {
+            time += gameTime.ElapsedGameTime.Milliseconds;
+            if (time >= 200)
+            {
+                time = 0;
+                colorLerp = colorLerp + (float)0.1;
+            }
+            TileMapDraw.MyColor = Color.Lerp(Color.White, Color.Black, colorLerp);
+            if (TileMapDraw.MyColor == Color.Black)
+            {
+                ShowMsgTodie = true;
+            }
+        }
         public void Update(GameTime gameTime)
         {
+            if (ShowMsgTodie && Keyboard.GetState().IsKeyDown(Keys.Space) ||
+                Mouse.GetState().LeftButton == ButtonState.Pressed)
+            {
+                LoadContent();
+            }
+            if (PercentHealth <= 0)
+            {
+                Die(gameTime);
+                return;
+            }
+            if (PercentHealth <= 5)
+            {
+                RedAlert(gameTime);
+            }
             if (pause) Game1.GameSence = 3;
             else Game1.GameSence = 2;
             if (!pause)
@@ -159,6 +231,12 @@ namespace KannaFarmByMonoGame
                 AmountPlants[0] = 10;
                 HaveRain = !HaveRain;
                 CanChangeRain = false;
+            }
+            time += gameTime.ElapsedGameTime.Milliseconds;
+            if (time >= LiveDown)
+            {
+                time = 0;
+                PercentHealth--;
             }
             if(Keyboard.GetState().IsKeyUp(Keys.Z))
             {
@@ -374,23 +452,23 @@ namespace KannaFarmByMonoGame
 
             for (int i = 0; i < 9; i++)
             {
-                spriteBatch.Draw(DailBox,new Rectangle(300+83*i,600,100,100),Color.White);
-                spriteBatch.DrawString(Fonts, (i + 1).ToString(), new Vector2(325 + 83 * i, 620), Color.Black);
-                spriteBatch.DrawString(FontsStatus, AmountPlants[i].ToString(), new Vector2(360 + 83 * i, 660), Color.Black);
+                spriteBatch.Draw(DailBox,new Rectangle(300+83*i,670,100,100),Color.White);
+                spriteBatch.DrawString(Fonts, (i + 1).ToString(), new Vector2(325 + 83 * i, 690), Color.Black);
+                spriteBatch.DrawString(FontsStatus, AmountPlants[i].ToString(), new Vector2(360 + 83 * i, 730), Color.Black);
             }
             spriteBatch.Draw(Status,new Rectangle(1200,50,130,100),Color.White);
             spriteBatch.DrawString(FontsStatus, PercentHealth.ToString() + " %", new Vector2(1260, 58), Color.SaddleBrown);
             spriteBatch.DrawString(FontsStatus, Coin.ToString() + " $", new Vector2(1236, 116), Color.SaddleBrown);
-            spriteBatch.Draw(PlantsTexture, new Rectangle(320, 615, 60, 60), new Rectangle(((6 - 1) % (int)16) * 16, ((6 - 1) / 16) * 16, 16, 16), Color.White);
-            spriteBatch.Draw(PlantsTexture, new Rectangle(320+83, 605, 60, 60), new Rectangle(((23 - 1) % (int)16) * 16, ((23 - 1) / 16) * 16, 16, 16), Color.White);
-            spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83*2, 615, 60, 60), new Rectangle(((38 - 1) % (int)16) * 16, ((38 - 1) / 16) * 16, 16, 16), Color.White);
-            spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 3, 615, 60, 60), new Rectangle(((55 - 1) % (int)16) * 16, ((55 - 1) / 16) * 16, 16, 16), Color.White);
-            spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 4, 615, 60, 60), new Rectangle(((71 - 1) % (int)16) * 16, ((71 - 1) / 16) * 16, 16, 16), Color.White);
-            spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 5, 615, 60, 60), new Rectangle(((87 - 1) % (int)16) * 16, ((87 - 1) / 16) * 16, 16, 16), Color.White);
-            spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 6, 615, 60, 60), new Rectangle(((135 - 1) % (int)16) * 16, ((135 - 1) / 16) * 16, 16, 16), Color.White);
-            spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 7, 610, 60, 60), new Rectangle(((151 - 1) % (int)16) * 16, ((151 - 1) / 16) * 16, 16, 16), Color.White);
-            spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 8, 615, 60, 60), new Rectangle(((63 - 1) % (int)16) * 16, ((63 - 1) / 16) * 16, 16, 16), Color.White);
-
+            spriteBatch.Draw(PlantsTexture, new Rectangle(320, 685, 60, 60), new Rectangle(((6 - 1) % (int)16) * 16, ((6 - 1) / 16) * 16, 16, 16), Color.White);
+            spriteBatch.Draw(PlantsTexture, new Rectangle(320+83, 675, 60, 60), new Rectangle(((23 - 1) % (int)16) * 16, ((23 - 1) / 16) * 16, 16, 16), Color.White);
+            spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83*2, 685, 60, 60), new Rectangle(((38 - 1) % (int)16) * 16, ((38 - 1) / 16) * 16, 16, 16), Color.White);
+            spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 3, 685, 60, 60), new Rectangle(((55 - 1) % (int)16) * 16, ((55 - 1) / 16) * 16, 16, 16), Color.White);
+            spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 4, 685, 60, 60), new Rectangle(((71 - 1) % (int)16) * 16, ((71 - 1) / 16) * 16, 16, 16), Color.White);
+            spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 5, 685, 60, 60), new Rectangle(((87 - 1) % (int)16) * 16, ((87 - 1) / 16) * 16, 16, 16), Color.White);
+            spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 6, 685, 60, 60), new Rectangle(((135 - 1) % (int)16) * 16, ((135 - 1) / 16) * 16, 16, 16), Color.White);
+            spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 7, 680, 60, 60), new Rectangle(((151 - 1) % (int)16) * 16, ((151 - 1) / 16) * 16, 16, 16), Color.White);
+            spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 8, 685, 60, 60), new Rectangle(((63 - 1) % (int)16) * 16, ((63 - 1) / 16) * 16, 16, 16), Color.White);
+            if(ShowMsgTodie) spriteBatch.DrawString(FontsStatus, "You loss bro!!!\nYou must try again later...", new Vector2(CharacterPos.X,CharacterPos.Y-50), Color.White);
         }
 
 

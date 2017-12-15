@@ -69,6 +69,7 @@ namespace KannaFarmByMonoGame
             if (Start > End)
             {
                 Map.intID[(int) IndexOfPlant.X, (int) IndexOfPlant.Y] = 0;
+                GamePlaySence.PercentHealth -= 5;
                 Start = 0;
                 timer.Enabled = false;
                 timer = null;

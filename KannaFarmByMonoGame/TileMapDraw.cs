@@ -24,7 +24,7 @@ namespace KannaFarmByMonoGame
         Vector2[] SourcePos;
         Vector2 ScreenSize;
         Vector2 TileSize;
-        private Color MyColor;
+        public static Color MyColor;
         public TileMapDraw(Texture2D texture, string file,int mapw,int maph, Vector2 screenSize)
         {
             Map = texture;
@@ -52,6 +52,7 @@ namespace KannaFarmByMonoGame
         }
         public void LoadContent()
         {
+            MyColor=Color.White;
             SplitArray = File.Split(',');
             intID = new int[mapWidth, mapHeight];
             CanGet=new bool[mapWidth, mapHeight];
@@ -66,7 +67,6 @@ namespace KannaFarmByMonoGame
         }
         public void Update(GameTime gameTime,Vector2 inputPos)
         {
-            MyColor = Color.White;
             PositionMap = inputPos;
         }
 
