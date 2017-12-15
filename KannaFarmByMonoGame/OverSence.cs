@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace KannaFarmByMonoGame
 {
-    class MenuSence
+    class OverSence
     {
         private ContentManager Content;
         private Vector2 ScreenSize, CloudPos;
@@ -20,7 +20,7 @@ namespace KannaFarmByMonoGame
         private SpriteButton BtnStart,BtnExit;
         private Boolean CanEsc=false;
         int[] CloudPosX = new int[10];
-        public MenuSence(ContentManager content,Vector2 screenSize)
+        public OverSence(ContentManager content,Vector2 screenSize)
         {
             Content = content;
             ScreenSize = screenSize;
@@ -30,7 +30,7 @@ namespace KannaFarmByMonoGame
         private void LoadContent()
         {
             BackGround = Content.Load<Texture2D>("Bg");
-            ButtonImage = Content.Load<Texture2D>("BtnStart");
+            ButtonImage = Content.Load<Texture2D>("BtnRetry");
             ButtonExit = Content.Load<Texture2D>("BtnExit");
             Cloud = Content.Load<Texture2D>("cloud_1");
             BtnStart = new SpriteButton(ButtonImage, new Vector2(200, 100), new Vector2(ScreenSize.X / 2 - 25-200, ScreenSize.Y / 2 - 50), ScreenSize, 2);
@@ -48,19 +48,10 @@ namespace KannaFarmByMonoGame
         {
             int BtnStartValue = BtnStart.GetValue(), BtnExitValue = BtnExit.GetValue();
             BtnStart.Update(gameTime);
-            if (Keyboard.GetState().IsKeyUp(Keys.Escape))
-            {
-                CanEsc = true;
-            }
-                if (Keyboard.GetState().IsKeyDown(Keys.Escape)&&CanEsc)
-                {
-                    CanEsc = false;
-                Game1.GameSence = 2;
-                GamePlaySence.pause = false;
-            }
             if (BtnStartValue != -1)
             {
                 CanEsc = false;
+                GamePlaySence.Reset = true;
                 Game1.GameSence = BtnStartValue;
                 GamePlaySence.pause = false;
             }

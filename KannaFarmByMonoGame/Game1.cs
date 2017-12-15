@@ -21,6 +21,7 @@ namespace KannaFarmByMonoGame
         GamePlaySence gamePlaySence;
         BackgroundScreen BackgroundScreen;
         private MenuSence menuSence;
+        private OverSence overSence;
         
 
         public Game1()
@@ -45,6 +46,7 @@ namespace KannaFarmByMonoGame
             gamePlaySence = new GamePlaySence(Content, ScreenSize);
             BackgroundScreen = new BackgroundScreen(Content,ScreenSize);
             menuSence=new MenuSence(Content,ScreenSize);
+            overSence=new OverSence(Content,ScreenSize);
             this.IsMouseVisible = false;
 
             base.Initialize();
@@ -145,7 +147,11 @@ namespace KannaFarmByMonoGame
                     menuSence.Draw(spriteBatch);
                     menuSence.Update(gameTime);
                     break;
-                
+                case 4:
+                    showMouse = true;
+                    overSence.Draw(spriteBatch);
+                    overSence.Update(gameTime);
+                    break;
 
 
 

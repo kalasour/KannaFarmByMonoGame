@@ -13,6 +13,7 @@ namespace KannaFarmByMonoGame
 {
     public class GamePlaySence
     {
+        public static Boolean Reset;
         private Boolean RedA;
         private int LiveDown;
         private int time,time2;
@@ -56,6 +57,7 @@ namespace KannaFarmByMonoGame
             Arr = new ArrOfMap();
             AmountPlants = new int[9];
             time = 0;
+            Reset = false;
             time2 = 0;
             RedA = false;
             LiveDown = 15000;
@@ -173,10 +175,14 @@ namespace KannaFarmByMonoGame
         }
         public void Update(GameTime gameTime)
         {
+            if (Reset)
+            {
+                LoadContent();
+            }
             if (ShowMsgTodie && Keyboard.GetState().IsKeyDown(Keys.Space) ||
                 Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
-                LoadContent();
+                Game1.GameSence = 4;
             }
             if (PercentHealth <= 0)
             {

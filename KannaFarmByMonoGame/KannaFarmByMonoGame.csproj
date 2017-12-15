@@ -45,6 +45,7 @@
     <Compile Include="BackgroundScreen.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GamePlaySence.cs" />
+    <Compile Include="OverSence.cs" />
     <Compile Include="MenuSence.cs" />
     <Compile Include="Plants.cs" />
     <Compile Include="Program.cs" />
