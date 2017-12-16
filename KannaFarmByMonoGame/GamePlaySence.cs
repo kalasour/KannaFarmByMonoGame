@@ -390,6 +390,11 @@ namespace KannaFarmByMonoGame
                     LenghtRain = PerCentRain;
                     PerCentRain = 100;
                 }
+                Random ran = new Random();
+                for (int i = 0; i < 9; i++)
+                {
+                    PricePlants[i] = ran.Next(50, 200);
+                }
                 CanChangeRain = false;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.H) && PressH)
