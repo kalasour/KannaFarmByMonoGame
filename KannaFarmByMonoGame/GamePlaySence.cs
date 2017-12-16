@@ -30,6 +30,7 @@ namespace KannaFarmByMonoGame
         private double Coin;
         int speed = 3;
         private bool PlantsUpdated;
+        private int starterNum;
         private bool FirstRain;
         private bool HaveRain;
         private bool CanChangeRain;
@@ -43,7 +44,9 @@ namespace KannaFarmByMonoGame
         private float colorLerp,colorLerp2;
         Texture2D Character;
         TileMapDraw Layer1,Collition,PlantsLayer, RainLayer, LandLayer, LandLayer2;
-        Texture2D SourceTexture, PlantsTexture, RainTexture,CollitionTexture, testTexture2D, testTexture2D2,DailBox,Status,Store,Starter,Help;
+        Texture2D SourceTexture, PlantsTexture, RainTexture,CollitionTexture, testTexture2D, testTexture2D2,DailBox,Status,Store, Starter
+            , Starter2
+            , Starter3, Help;
         private ArrOfMap Arr;
         private Vector2 CharacterPos;
         String pathWalk = "boyMove";
@@ -56,7 +59,7 @@ namespace KannaFarmByMonoGame
         private Boolean StoreCheck, StoreStand,Played;
         private SpriteFont Fonts,FontsStatus;
         private int[] AmountPlants;
-        private Boolean ShowMsgTodie;
+        private Boolean ShowMsgTodie,CanSpace;
         private Boolean CanOffStore;
         private int[] priceSeeds,PricePlants;
         private Texture2D BtnBlank,FoodPage;
@@ -83,6 +86,8 @@ namespace KannaFarmByMonoGame
             {
                 PlansDetail[i] = Content.Load<Texture2D>((i + 1).ToString());
             }
+            CanSpace = true;
+            starterNum = 0;
             isStarter = true;
             isHelp = false;
             PressH = false;
@@ -94,6 +99,8 @@ namespace KannaFarmByMonoGame
             GetCoin = Content.Load<SoundEffect>("GetCoin");
             Heart = Content.Load<SoundEffect>("Heart");
             Starter = Content.Load<Texture2D>("Starter");
+            Starter2 = Content.Load<Texture2D>("Starter2");
+            Starter3 = Content.Load<Texture2D>("Starter3");
             Help = Content.Load<Texture2D>("HowToPlay");
             FuckingSound = Heart.CreateInstance();
             FuckingSound.IsLooped = true;
@@ -187,7 +194,7 @@ namespace KannaFarmByMonoGame
             RainTime.Enabled = false;
             ShowMsgTodie = false;
             PercentHealth = 100;
-            Coin = 100;
+            Coin = -100;
             Status = Content.Load<Texture2D>("status");
             SourceTexture = Content.Load<Texture2D>("Maps/BG");
             PlantsTexture = Content.Load<Texture2D>("Maps/Plants");
@@ -307,11 +314,17 @@ namespace KannaFarmByMonoGame
         {
             if (isStarter)
             {
-                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                if (Keyboard.GetState().IsKeyDown(Keys.Space)&&CanSpace)
                 {
-                    isStarter = false;
+                    starterNum++;
+                    if(starterNum==3)isStarter = false;
                     AmountPlants[0] = 9;
                     isHelp = true;
+                    CanSpace = false;
+                }
+                if (Keyboard.GetState().IsKeyUp(Keys.Space))
+                {
+                    CanSpace = true;
                 }
             }
             if (PercentHealth >= 100) PercentHealth = 100;
@@ -571,7 +584,7 @@ namespace KannaFarmByMonoGame
             if (HearthShow)
             {
                 HearthDelay += gameTime.ElapsedGameTime.Milliseconds;
-                if (HearthDelay >= 1000)
+                if (HearthDelay >= 500)
                 {
                     HearthDelay = 0;
                     HearthShow = false;
@@ -605,7 +618,7 @@ namespace KannaFarmByMonoGame
             if (CoinShow)
             {
                 CoinDelay += gameTime.ElapsedGameTime.Milliseconds;
-                if (CoinDelay >= 1000)
+                if (CoinDelay >= 500)
                 {
                     CoinDelay = 0;
                     CoinShow = false;
@@ -879,16 +892,21 @@ namespace KannaFarmByMonoGame
             }
             if (HearthShow)
             {
-                spriteBatch.Draw(HearthTexture,new Rectangle((int)CharacterPos.X,(int)CharacterPos.Y+15,25,25),Color.White);
+                spriteBatch.Draw(HearthTexture,new Rectangle((int)CharacterPos.X,(int)CharacterPos.Y-25,25,25),Color.White);
             }
             if (CoinShow)
             {
-                spriteBatch.Draw(CoinTexture, new Rectangle((int)CharacterPos.X, (int)CharacterPos.Y + 15, 25, 25), Color.White);
+                spriteBatch.Draw(CoinTexture, new Rectangle((int)CharacterPos.X, (int)CharacterPos.Y - 25, 25, 25), Color.White);
             }
             spriteBatch.DrawString(ClockFonts,Hours.ToString()+" : "+Minutes.ToString()+" : "+Secconds.ToString(),new Vector2(1200,5), Color.White);
             if(RainIsComings) spriteBatch.DrawString(ClockFonts, "Rain is Coming in 10 secs For " + LenghtRain.ToString() + " Secs.", new Vector2(300, 5), Color.Black);
             if(isHelp)spriteBatch.Draw(Help,new Vector2(300,200),Color.White);
-            if(isStarter)spriteBatch.Draw(Starter,new Vector2(300,200),Color.White);
+            if (isStarter)
+            {
+                if (starterNum == 0) spriteBatch.Draw(Starter, new Vector2(300, 200), Color.White);
+                if (starterNum == 1) spriteBatch.Draw(Starter2, new Vector2(300, 200), Color.White);
+                if (starterNum == 2) spriteBatch.Draw(Starter3, new Vector2(300, 200), Color.White);
+            }
         }
 
 
