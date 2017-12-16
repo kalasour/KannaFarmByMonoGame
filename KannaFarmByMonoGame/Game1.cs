@@ -43,7 +43,7 @@ namespace KannaFarmByMonoGame
         {
             graphics.PreferredBackBufferHeight = (int)ScreenSize.Y;
             graphics.PreferredBackBufferWidth = (int)ScreenSize.X;
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             ScreenSize = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             gamePlaySence = new GamePlaySence(Content, ScreenSize);
