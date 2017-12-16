@@ -485,6 +485,11 @@ namespace KannaFarmByMonoGame
             }
             if (Minutes >= 60)
             {
+                Random ran=new Random();
+                for (int i = 0; i < 9; i++)
+                {
+                    PricePlants[i] = ran.Next(50,200);
+                }
                 Minutes = 0;
                 Hours++;
 
