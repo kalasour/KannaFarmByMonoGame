@@ -15,7 +15,7 @@ namespace KannaFarmByMonoGame
 {
     public class GamePlaySence
     {
-        
+        private Texture2D[] PlansDetail;
         private Boolean page;
         private SoundEffect RainSound,DoorSound,GetCoin,Heart;
         public static Boolean Reset;
@@ -78,6 +78,11 @@ namespace KannaFarmByMonoGame
         }
         public void LoadContent()
         {
+            PlansDetail=new Texture2D[9];
+            for (int i = 0; i < 9; i++)
+            {
+                PlansDetail[i] = Content.Load<Texture2D>((i + 1).ToString());
+            }
             isStarter = true;
             isHelp = false;
             PressH = false;
@@ -867,7 +872,8 @@ namespace KannaFarmByMonoGame
                     new Rectangle(300 + 83 * i, 670, 100, 100).Intersects(new Rectangle(Mouse.GetState().X,
                         Mouse.GetState().Y, 0, 0)) && Draw)
                 {
-                    spriteBatch.DrawString(ClockFonts, PricePlants[i].ToString() + " $", new Vector2(Mouse.GetState().X - 50, Mouse.GetState().Y - 60), Color.Black);
+                    spriteBatch.Draw(PlansDetail[i], new Vector2(Mouse.GetState().X - 200, Mouse.GetState().Y - 200), Color.White);
+                    spriteBatch.DrawString(ClockFonts, PricePlants[i].ToString() + " $", new Vector2(Mouse.GetState().X - 135, Mouse.GetState().Y - 50), Color.SaddleBrown);
                     Draw = false;
                 }
             }
