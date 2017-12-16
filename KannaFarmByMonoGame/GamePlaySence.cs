@@ -34,6 +34,7 @@ namespace KannaFarmByMonoGame
         private bool HaveRain;
         private bool CanChangeRain;
         private bool isAction;
+        private Boolean isStarter;
         private Boolean CanTab;
         private int Secconds, Minutes, Hours;
         private Boolean canPause;
@@ -42,12 +43,12 @@ namespace KannaFarmByMonoGame
         private float colorLerp,colorLerp2;
         Texture2D Character;
         TileMapDraw Layer1,Collition,PlantsLayer, RainLayer, LandLayer, LandLayer2;
-        Texture2D SourceTexture, PlantsTexture, RainTexture,CollitionTexture, testTexture2D, testTexture2D2,DailBox,Status,Store;
+        Texture2D SourceTexture, PlantsTexture, RainTexture,CollitionTexture, testTexture2D, testTexture2D2,DailBox,Status,Store,Starter,Help;
         private ArrOfMap Arr;
         private Vector2 CharacterPos;
         String pathWalk = "boyMove";
         String pathActions = "boyAction";
-        private SoundEffectInstance FuckingSound,RainSoundIn;
+        private SoundEffectInstance FuckingSound,RainSoundIn,No;
         SpriteAnimations SpriteWalks;
         SpriteAnimations SpriteAction;
         Vector2 posMap;
@@ -68,6 +69,7 @@ namespace KannaFarmByMonoGame
         private int RainTimeCount,CountDownRain;
         private int LenghtRain;
         private Boolean RainIsComings;
+        private Boolean PressH, isHelp;
         public GamePlaySence(ContentManager content, Vector2 screensize)
         {
             Content = content;
@@ -76,6 +78,9 @@ namespace KannaFarmByMonoGame
         }
         public void LoadContent()
         {
+            isStarter = true;
+            isHelp = false;
+            PressH = false;
             BtnFood=new SpriteButton[3];
             CanTab = true;
             Played = true;
@@ -83,8 +88,11 @@ namespace KannaFarmByMonoGame
             DoorSound = Content.Load<SoundEffect>("Door");
             GetCoin = Content.Load<SoundEffect>("GetCoin");
             Heart = Content.Load<SoundEffect>("Heart");
+            Starter = Content.Load<Texture2D>("Starter");
+            Help = Content.Load<Texture2D>("HowToPlay");
             FuckingSound = Heart.CreateInstance();
             FuckingSound.IsLooped = true;
+            No = Content.Load<SoundEffect>("No").CreateInstance();
             RainSoundIn = RainSound.CreateInstance();
             RainSoundIn.IsLooped = true;
             RainIsComings = false;
@@ -250,6 +258,12 @@ namespace KannaFarmByMonoGame
 
         public void Die(GameTime gameTime)
         {
+            FuckingSound.Stop();
+            if (!Played)
+            {
+                No.Play();
+                Played = true;
+            }
             time += gameTime.ElapsedGameTime.Milliseconds;
             if (time >= 200)
             {
@@ -286,6 +300,14 @@ namespace KannaFarmByMonoGame
         }
         public void Update(GameTime gameTime)
         {
+            if (isStarter)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                {
+                    isStarter = false;
+                    AmountPlants[0] = 9;
+                }
+            }
             if (PercentHealth >= 100) PercentHealth = 100;
             if (Reset)
             {
@@ -368,6 +390,15 @@ namespace KannaFarmByMonoGame
                     PerCentRain = 100;
                 }
                 CanChangeRain = false;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.H) && PressH)
+            {
+                PressH = false;
+                isHelp = !isHelp;
+            }
+            if (Keyboard.GetState().IsKeyUp(Keys.H))
+            {
+                PressH = true;
             }
             if (HaveRain)
             {
@@ -839,6 +870,8 @@ namespace KannaFarmByMonoGame
             }
             spriteBatch.DrawString(ClockFonts,Hours.ToString()+" : "+Minutes.ToString()+" : "+Secconds.ToString(),new Vector2(1200,5), Color.White);
             if(RainIsComings) spriteBatch.DrawString(ClockFonts, "Rain is Coming in 10 secs For " + LenghtRain.ToString() + " Secs.", new Vector2(300, 5), Color.Black);
+            if(isHelp)spriteBatch.Draw(Help,new Vector2(300,200),Color.White);
+            if(isStarter)spriteBatch.Draw(Starter,new Vector2(300,200),Color.White);
         }
 
 
