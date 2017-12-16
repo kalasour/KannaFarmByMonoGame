@@ -166,7 +166,7 @@ namespace KannaFarmByMonoGame
             RainTime.Enabled = false;
             ShowMsgTodie = false;
             PercentHealth = 100;
-            Coin = 15000;
+            Coin = 100;
             Status = Content.Load<Texture2D>("status");
             SourceTexture = Content.Load<Texture2D>("Maps/BG");
             PlantsTexture = Content.Load<Texture2D>("Maps/Plants");
@@ -572,7 +572,7 @@ namespace KannaFarmByMonoGame
                         int val = BtnBuy[h].GetValue();
                         if (val != -1)
                         {
-                            if (Coin > priceSeeds[h])
+                            if (Coin >= priceSeeds[h])
                             {
                                 AmountPlants[h]++;
                                 Coin -= priceSeeds[h];
@@ -735,6 +735,7 @@ namespace KannaFarmByMonoGame
         }
         public void Draw(SpriteBatch spriteBatch)
         {
+            Boolean Draw = true;
             Collition.Draw(spriteBatch);
             Layer1.Draw(spriteBatch);
             LandLayer.Draw(spriteBatch);
@@ -754,6 +755,7 @@ namespace KannaFarmByMonoGame
                 spriteBatch.Draw(DailBox,new Rectangle(300+83*i,670,100,100),Color.White);
                 spriteBatch.DrawString(Fonts, (i + 1).ToString(), new Vector2(325 + 83 * i, 690), Color.Black);
                 spriteBatch.DrawString(FontsStatus, AmountPlants[i].ToString(), new Vector2(360 + 83 * i, 730), Color.Black);
+                
             }
             spriteBatch.Draw(Status,new Rectangle(1200,50,130,100),Color.White);
             spriteBatch.DrawString(FontsStatus, PercentHealth.ToString() + " %", new Vector2(1260, 58), Color.SaddleBrown);
@@ -798,6 +800,16 @@ namespace KannaFarmByMonoGame
                     }
                 }
                 
+            }
+            for (int i = 0; i < 9; i++)
+            {
+                if (Game1.showMouse &&
+                    new Rectangle(300 + 83 * i, 670, 100, 100).Intersects(new Rectangle(Mouse.GetState().X,
+                        Mouse.GetState().Y, 0, 0)) && Draw)
+                {
+                    spriteBatch.DrawString(ClockFonts, PricePlants[i].ToString() + " $", new Vector2(Mouse.GetState().X - 50, Mouse.GetState().Y - 60), Color.Black);
+                    Draw = false;
+                }
             }
             if (HearthShow)
             {
