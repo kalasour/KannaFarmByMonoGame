@@ -9,13 +9,15 @@ using System.Threading.Tasks;
 using System.Timers;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace KannaFarmByMonoGame
 {
     public class GamePlaySence
     {
+        
         private Boolean page;
-        private SoundEffect RainSound,DoorSound,GetCoin;
+        private SoundEffect RainSound,DoorSound,GetCoin,Heart;
         public static Boolean Reset;
         private Boolean RedA;
         private int LiveDown;
@@ -45,11 +47,12 @@ namespace KannaFarmByMonoGame
         private Vector2 CharacterPos;
         String pathWalk = "boyMove";
         String pathActions = "boyAction";
+        private SoundEffectInstance FuckingSound,RainSoundIn;
         SpriteAnimations SpriteWalks;
         SpriteAnimations SpriteAction;
         Vector2 posMap;
         private int clock;
-        private Boolean StoreCheck, StoreStand;
+        private Boolean StoreCheck, StoreStand,Played;
         private SpriteFont Fonts,FontsStatus;
         private int[] AmountPlants;
         private Boolean ShowMsgTodie;
@@ -75,10 +78,15 @@ namespace KannaFarmByMonoGame
         {
             BtnFood=new SpriteButton[3];
             CanTab = true;
+            Played = true;
             RainSound = Content.Load<SoundEffect>("Rain");
             DoorSound = Content.Load<SoundEffect>("Door");
             GetCoin = Content.Load<SoundEffect>("GetCoin");
-            RainSound.CreateInstance().IsLooped = true;
+            Heart = Content.Load<SoundEffect>("Heart");
+            FuckingSound = Heart.CreateInstance();
+            FuckingSound.IsLooped = true;
+            RainSoundIn = RainSound.CreateInstance();
+            RainSoundIn.IsLooped = true;
             RainIsComings = false;
             CountDownRain = 0;
             page = true;
@@ -269,8 +277,7 @@ namespace KannaFarmByMonoGame
             
             if (CountDownRain >= 10)
             {
-                RainSound.CreateInstance().IsLooped = true;
-                RainSound.Play();
+                RainSoundIn.Play();
 
                 CountDownRain = 0;
                 HaveRain=true;
@@ -297,7 +304,18 @@ namespace KannaFarmByMonoGame
             }
             if (PercentHealth <= 5)
             {
+                if (Played)
+                {
+                    FuckingSound.Play();
+                    Played = false;
+                }
                 RedAlert(gameTime);
+            }
+            if (PercentHealth > 5)
+            {
+                Played = true;
+                FuckingSound.Stop();
+                Heart.CreateInstance().Pause();
             }
             if (pause) Game1.GameSence = 3;
             else Game1.GameSence = 2;
@@ -366,7 +384,7 @@ namespace KannaFarmByMonoGame
             if (LenghtRain == 0)
             {
                 HaveRain = false;
-                RainSound.CreateInstance().Stop();
+                RainSoundIn.Stop();
                 
             }
             time += gameTime.ElapsedGameTime.Milliseconds;
