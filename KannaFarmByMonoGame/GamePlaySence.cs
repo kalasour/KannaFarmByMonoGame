@@ -8,11 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace KannaFarmByMonoGame
 {
     public class GamePlaySence
     {
+        private Boolean page;
+        private SoundEffect RainSound,DoorSound,GetCoin;
         public static Boolean Reset;
         private Boolean RedA;
         private int LiveDown;
@@ -29,13 +32,15 @@ namespace KannaFarmByMonoGame
         private bool HaveRain;
         private bool CanChangeRain;
         private bool isAction;
+        private Boolean CanTab;
+        private int Secconds, Minutes, Hours;
         private Boolean canPause;
         static public Boolean pause;
         int MapWidth, MapHeight;
         private float colorLerp,colorLerp2;
         Texture2D Character;
         TileMapDraw Layer1,Collition,PlantsLayer, RainLayer, LandLayer, LandLayer2;
-        Texture2D SourceTexture, PlantsTexture, RainTexture,CollitionTexture, testTexture2D, testTexture2D2,DailBox,Status;
+        Texture2D SourceTexture, PlantsTexture, RainTexture,CollitionTexture, testTexture2D, testTexture2D2,DailBox,Status,Store;
         private ArrOfMap Arr;
         private Vector2 CharacterPos;
         String pathWalk = "boyMove";
@@ -43,9 +48,23 @@ namespace KannaFarmByMonoGame
         SpriteAnimations SpriteWalks;
         SpriteAnimations SpriteAction;
         Vector2 posMap;
+        private int clock;
+        private Boolean StoreCheck, StoreStand;
         private SpriteFont Fonts,FontsStatus;
         private int[] AmountPlants;
         private Boolean ShowMsgTodie;
+        private Boolean CanOffStore;
+        private int[] priceSeeds,PricePlants;
+        private Texture2D BtnBlank,FoodPage;
+        private int PerCentRain;
+        private SpriteButton[] BtnBuy,BtnFood;
+        private Texture2D CoinTexture, HearthTexture;
+        private Boolean CoinShow, HearthShow;
+        private int CoinDelay, HearthDelay;
+        private SpriteFont ClockFonts;
+        private int RainTimeCount,CountDownRain;
+        private int LenghtRain;
+        private Boolean RainIsComings;
         public GamePlaySence(ContentManager content, Vector2 screensize)
         {
             Content = content;
@@ -54,10 +73,72 @@ namespace KannaFarmByMonoGame
         }
         public void LoadContent()
         {
+            BtnFood=new SpriteButton[3];
+            CanTab = true;
+            RainSound = Content.Load<SoundEffect>("Rain");
+            DoorSound = Content.Load<SoundEffect>("Door");
+            GetCoin = Content.Load<SoundEffect>("GetCoin");
+            RainSound.CreateInstance().IsLooped = true;
+            RainIsComings = false;
+            CountDownRain = 0;
+            page = true;
+            RainTimeCount = 0;
+            PerCentRain = 100;
+            clock = 0;
+            Secconds = 0;
+            Minutes = 0;
+            Hours = 0;
+            CanOffStore = false;
+            LenghtRain = 0;
+            CoinShow = false;
+            CoinDelay = 0;
+            HearthShow = false;
+            HearthDelay = 0;
+            StoreCheck = false;
+            StoreStand = true;
+            priceSeeds = new int[9];
+            priceSeeds[0] = 40;
+            priceSeeds[1] = 100;
+            priceSeeds[2] = 50;
+            priceSeeds[3] = 40;
+            priceSeeds[4] = 150;
+            priceSeeds[5] = 200;
+            priceSeeds[6] = 120;
+            priceSeeds[7] = 100;
+            priceSeeds[8] = 50;
+            PricePlants=new int[9];
+            PricePlants[0] = 70;
+            PricePlants[1] = 125;
+            PricePlants[2] = 80;
+            PricePlants[3] =60;
+            PricePlants[4] =170 ;
+            PricePlants[5] = 250;
+            PricePlants[6] = 150;
+            PricePlants[7] = 130;
+            PricePlants[8] = 100;
+            CoinTexture = Content.Load<Texture2D>("Coin");
+            HearthTexture = Content.Load<Texture2D>("Hearth");
+            ClockFonts = Content.Load<SpriteFont>("ClockFonts");
+            FoodPage = Content.Load<Texture2D>("Food");
             Arr = new ArrOfMap();
             AmountPlants = new int[9];
             time = 0;
+            Store = Content.Load<Texture2D>("Store");
+            BtnBlank = Content.Load<Texture2D>("BtnShop");
+            BtnBuy=new SpriteButton[9];
+            BtnBuy[0] = new SpriteButton(BtnBlank, new Vector2(60, 30), new Vector2(500, 275), ScreenSize, 0,Content);
+            BtnBuy[1] = new SpriteButton(BtnBlank, new Vector2(60, 30), new Vector2(500, 360), ScreenSize, 0, Content);
+            BtnBuy[2] = new SpriteButton(BtnBlank, new Vector2(60, 30), new Vector2(500, 450), ScreenSize, 0, Content);
+            BtnBuy[3] = new SpriteButton(BtnBlank, new Vector2(60, 30), new Vector2(740, 275), ScreenSize, 0, Content);
+            BtnBuy[4] = new SpriteButton(BtnBlank, new Vector2(60, 30), new Vector2(740, 360), ScreenSize, 0, Content);
+            BtnBuy[5] = new SpriteButton(BtnBlank, new Vector2(60, 30), new Vector2(740, 450), ScreenSize, 0, Content);
+            BtnBuy[6] = new SpriteButton(BtnBlank, new Vector2(60, 30), new Vector2(980, 275), ScreenSize, 0, Content);
+            BtnBuy[7] = new SpriteButton(BtnBlank, new Vector2(60, 30), new Vector2(980, 350), ScreenSize, 0, Content);
+            BtnBuy[8] = new SpriteButton(BtnBlank, new Vector2(60, 30), new Vector2(980, 450), ScreenSize, 0, Content);
             Reset = false;
+            BtnFood[0] = new SpriteButton(BtnBlank, new Vector2(60, 30), new Vector2(490, 450), ScreenSize, 1, Content);
+            BtnFood[1] = new SpriteButton(BtnBlank, new Vector2(60, 30), new Vector2(730, 450), ScreenSize, 2, Content);
+            BtnFood[2] = new SpriteButton(BtnBlank, new Vector2(60, 30), new Vector2(970, 450), ScreenSize, 3, Content);
             time2 = 0;
             RedA = false;
             LiveDown = 15000;
@@ -67,7 +148,7 @@ namespace KannaFarmByMonoGame
             PlantsUpdated = true;
             Arrplants = new Plants[85, 48];
             CharacterPos = new Vector2(1000, 100);
-            posMap = new Vector2(0, 0);
+            posMap = new Vector2(-1300, 0);
             FirstRain = true;
             Character = Content.Load<Texture2D>(pathWalk);
             SpriteWalks = new SpriteAnimations(Content, pathWalk, 4, 4, 1, 4);
@@ -85,7 +166,7 @@ namespace KannaFarmByMonoGame
             RainTime.Enabled = false;
             ShowMsgTodie = false;
             PercentHealth = 100;
-            Coin = 150;
+            Coin = 15000;
             Status = Content.Load<Texture2D>("status");
             SourceTexture = Content.Load<Texture2D>("Maps/BG");
             PlantsTexture = Content.Load<Texture2D>("Maps/Plants");
@@ -173,11 +254,36 @@ namespace KannaFarmByMonoGame
                 ShowMsgTodie = true;
             }
         }
+
+        public void RainIsComing(GameTime gameTime)
+        {
+            RainTimeCount += gameTime.ElapsedGameTime.Milliseconds;
+            if (!HaveRain)
+            {
+                if (RainTimeCount >= 1000)
+            {
+                CountDownRain++;
+                RainTimeCount = 0;
+            }
+            }
+            
+            if (CountDownRain >= 10)
+            {
+                RainSound.CreateInstance().IsLooped = true;
+                RainSound.Play();
+
+                CountDownRain = 0;
+                HaveRain=true;
+            }
+            
+        }
         public void Update(GameTime gameTime)
         {
+            if (PercentHealth >= 100) PercentHealth = 100;
             if (Reset)
             {
                 LoadContent();
+
             }
             if (ShowMsgTodie && Keyboard.GetState().IsKeyDown(Keys.Space) ||
                 Mouse.GetState().LeftButton == ButtonState.Pressed)
@@ -234,9 +340,34 @@ namespace KannaFarmByMonoGame
             if (pause)return;
             if(Keyboard.GetState().IsKeyDown(Keys.Z)&&CanChangeRain)
             {
-                AmountPlants[0] = 10;
-                HaveRain = !HaveRain;
+                Random fuck = new Random();
+
+                PerCentRain = fuck.Next(1, 100);
+                if (PerCentRain <= 40 && !HaveRain)
+                {
+                    RainIsComings = true;
+                    LenghtRain = PerCentRain;
+                    PerCentRain = 100;
+                }
                 CanChangeRain = false;
+            }
+            if (HaveRain)
+            {
+                RainTimeCount += gameTime.ElapsedGameTime.Milliseconds;
+                RainIsComings = false;
+                if (RainTimeCount >= 1000)
+                {
+                    RainTimeCount = 0;
+                    LenghtRain--;
+                    RainTimeCount = 0;
+
+                }
+            }
+            if (LenghtRain == 0)
+            {
+                HaveRain = false;
+                RainSound.CreateInstance().Stop();
+                
             }
             time += gameTime.ElapsedGameTime.Milliseconds;
             if (time >= LiveDown)
@@ -266,6 +397,7 @@ namespace KannaFarmByMonoGame
             }
             else if(!HaveRain&&!PlantsUpdated)
             {
+                
                 PlantsUpdated = true;
                 for (int i = 0; i < 48; i++)
                 {
@@ -280,7 +412,37 @@ namespace KannaFarmByMonoGame
 
                 }
             }
+            clock += gameTime.ElapsedGameTime.Milliseconds;
+            if (clock >= 1000)
+            {
+                clock = 0;
+                Secconds++;
+            }
+            if (Secconds >= 60)
+            {
+                Secconds = 0;
+                Minutes++;
+                
+                Random fuck=new Random();
+                
+                PerCentRain =fuck.Next(1,100);
+                if (PerCentRain <= 40&&!HaveRain)
+                {
+                    RainIsComings = true;
+                    LenghtRain = PerCentRain;
+                    PerCentRain = 100;
+                }
+            }
+            if (Minutes >= 60)
+            {
+                Minutes = 0;
+                Hours++;
 
+            }
+            if (RainIsComings)
+            {
+                RainIsComing(gameTime);
+            }
             SpriteWalks.Update(gameTime);
             SpriteAction.Update(gameTime);
             RainLayer.Update(gameTime,posMap);
@@ -329,14 +491,139 @@ namespace KannaFarmByMonoGame
             }
             if (Keyboard.GetState().IsKeyDown(Keys.E) && PlantsLayer.CanGet[(int)getIndexPos().X, (int)getIndexPos().Y])
             {
+                Arrplants[(int) getIndexPos().X, (int) getIndexPos().Y].timer.Enabled = false;
+                Arrplants[(int)getIndexPos().X, (int)getIndexPos().Y].timer = null;
                 Arrplants[(int) getIndexPos().X, (int) getIndexPos().Y] = ListPlants(0);
-
+                
                 PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] = 0;
                 PlantsLayer.CanGet[(int)getIndexPos().X, (int)getIndexPos().Y]=false;
-                PercentHealth -= 0.5;
+                
+                PercentHealth += 5;
+                HearthShow = true;
+                HearthDelay = 0;
 
             }
-
+            if (HearthShow)
+            {
+                HearthDelay += gameTime.ElapsedGameTime.Milliseconds;
+                if (HearthDelay >= 1000)
+                {
+                    HearthDelay = 0;
+                    HearthShow = false;
+                }
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.S) && PlantsLayer.CanGet[(int)getIndexPos().X, (int)getIndexPos().Y])
+            {
+                int Index;
+                Arrplants[(int)getIndexPos().X, (int)getIndexPos().Y].timer.Enabled = false;
+                Arrplants[(int)getIndexPos().X, (int)getIndexPos().Y].timer = null;
+                Arrplants[(int)getIndexPos().X, (int)getIndexPos().Y] = ListPlants(0);
+                
+                Index = PlantsLayer.intID[(int) getIndexPos().X, (int) getIndexPos().Y];
+                PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] = 0;
+                PlantsLayer.CanGet[(int)getIndexPos().X, (int)getIndexPos().Y] = false;
+                if (Index == 6) Index = 0;
+                if (Index == 23) Index = 1;
+                if (Index == 38) Index = 2;
+                if (Index == 55) Index = 3;
+                if (Index == 71) Index = 4;
+                if (Index == 87) Index = 5;
+                if (Index == 135) Index = 6;
+                if (Index == 151) Index = 7;
+                if (Index == 63) Index = 8;
+                Coin += PricePlants[Index];
+                GetCoin.Play();
+                PercentHealth -= 0.5;
+                CoinShow = true;
+                CoinDelay = 0;
+            }
+            if (CoinShow)
+            {
+                CoinDelay += gameTime.ElapsedGameTime.Milliseconds;
+                if (CoinDelay >= 1000)
+                {
+                    CoinDelay = 0;
+                    CoinShow = false;
+                }
+            }
+            if (getIndexPos().X == 76 && getIndexPos().Y == 38&&StoreStand)
+            {
+                DoorSound.Play();
+                StoreStand = false;
+                StoreCheck = true;
+                TileMapDraw.MyColor = Color.Gray;
+                CanOffStore = true;
+            }
+            if (StoreCheck)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Tab) && CanTab)
+                {
+                    CanTab = false;
+                    page = !page;
+                }
+                if (Keyboard.GetState().IsKeyUp(Keys.Tab) )
+                {
+                    CanTab = true;
+                }
+                if (page)
+                {
+                    for (int h = 0; h < 9; h++)
+                    {
+                        int val = BtnBuy[h].GetValue();
+                        if (val != -1)
+                        {
+                            if (Coin > priceSeeds[h])
+                            {
+                                AmountPlants[h]++;
+                                Coin -= priceSeeds[h];
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    for (int h = 0; h < 3; h++)
+                    {
+                        int val = BtnFood[h].GetValue();
+                        if (val != -1)
+                        {
+                            if (val == 1)
+                            {
+                                if (Coin >= 100)
+                                {
+                                    Coin -= 100;
+                                    PercentHealth += 10;
+                                }
+                            }else if (val == 2)
+                            {
+                                if (Coin >= 200)
+                                {
+                                    Coin -= 200;
+                                    PercentHealth += 30;
+                                }
+                            }
+                            else if (val == 3)
+                            {
+                                if (Coin >= 350)
+                                {
+                                    Coin -= 350;
+                                    PercentHealth += 60;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                
+            }
+            
+            if ((getIndexPos().X != 76 || getIndexPos().Y != 38)&&CanOffStore)
+            {
+                CanOffStore = false;
+                StoreStand = true;
+                StoreCheck = false;
+                TileMapDraw.MyColor = Color.White;
+            }
             if (Keyboard.GetState().IsKeyDown(Keys.R) && LandLayer2.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 1 && PlantsLayer.intID[(int)getIndexPos().X, (int)getIndexPos().Y] == 0)
             {
                 LandLayer2.intID[(int)getIndexPos().X, (int)getIndexPos().Y] = 0;
@@ -411,6 +698,13 @@ namespace KannaFarmByMonoGame
                 SpriteWalks.isEnable = false;
             }
             RainTime.Enabled = HaveRain;
+            for(int abc=0;abc<9;abc++)
+            BtnBuy[abc].Update(gameTime);
+
+            for (int a = 0; a < 3; a++)
+            {
+                BtnFood[a].Update(gameTime);
+            }
         }
         public void Rainy(Object source, ElapsedEventArgs e)
         {
@@ -438,7 +732,6 @@ namespace KannaFarmByMonoGame
                     }
                 }
             }
-
         }
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -474,7 +767,48 @@ namespace KannaFarmByMonoGame
             spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 6, 685, 60, 60), new Rectangle(((135 - 1) % (int)16) * 16, ((135 - 1) / 16) * 16, 16, 16), Color.White);
             spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 7, 680, 60, 60), new Rectangle(((151 - 1) % (int)16) * 16, ((151 - 1) / 16) * 16, 16, 16), Color.White);
             spriteBatch.Draw(PlantsTexture, new Rectangle(320 + 83 * 8, 685, 60, 60), new Rectangle(((63 - 1) % (int)16) * 16, ((63 - 1) / 16) * 16, 16, 16), Color.White);
-            if(ShowMsgTodie) spriteBatch.DrawString(FontsStatus, "You loss bro!!!\nYou must try again later...", new Vector2(CharacterPos.X,CharacterPos.Y-50), Color.White);
+            if(ShowMsgTodie) spriteBatch.DrawString(FontsStatus, "You loss bro!!!\nYou must try again later...", new Vector2(CharacterPos.X, CharacterPos.Y - 50), Color.White);
+            if (StoreCheck)
+            {
+                Game1.showMouse = true;
+                if(page)
+                {
+                    spriteBatch.Draw(Store, new Vector2(300, 0), Color.White);
+                    for (int abc = 0; abc < 9; abc++)
+                        BtnBuy[abc].Draw(spriteBatch);
+                    spriteBatch.DrawString(FontsStatus, priceSeeds[0].ToString() + " $", new Vector2(527, 260), Color.SaddleBrown);
+                    spriteBatch.DrawString(FontsStatus, priceSeeds[1].ToString() + " $", new Vector2(527, 345), Color.SaddleBrown);
+                    spriteBatch.DrawString(FontsStatus, priceSeeds[2].ToString() + " $", new Vector2(527, 435), Color.SaddleBrown);
+                    spriteBatch.DrawString(FontsStatus, priceSeeds[3].ToString() + " $", new Vector2(527 + 245, 260), Color.SaddleBrown);
+                    spriteBatch.DrawString(FontsStatus, priceSeeds[4].ToString() + " $", new Vector2(527 + 245, 345), Color.SaddleBrown);
+                    spriteBatch.DrawString(FontsStatus, priceSeeds[5].ToString() + " $", new Vector2(527 + 245, 435), Color.SaddleBrown);
+                    spriteBatch.DrawString(FontsStatus, priceSeeds[6].ToString() + " $", new Vector2(527 + 480, 260), Color.SaddleBrown);
+                    spriteBatch.DrawString(FontsStatus, priceSeeds[7].ToString() + " $", new Vector2(527 + 480, 335), Color.SaddleBrown);
+                    spriteBatch.DrawString(FontsStatus, priceSeeds[8].ToString() + " $", new Vector2(527 + 480, 435), Color.SaddleBrown);
+                }
+                else
+                {
+                    spriteBatch.Draw(FoodPage, new Vector2(245, 55), Color.White);
+                    spriteBatch.DrawString(FontsStatus,  "100 $\n 10 %", new Vector2(470, 380), Color.SaddleBrown);
+                    spriteBatch.DrawString(FontsStatus,"200 $\n 30%", new Vector2(710, 380), Color.SaddleBrown);
+                    spriteBatch.DrawString(FontsStatus,"350 $\n 60%", new Vector2(950, 380), Color.SaddleBrown);
+                    for (int a = 0; a < 3; a++)
+                    {
+                        BtnFood[a].Draw(spriteBatch);
+                    }
+                }
+                
+            }
+            if (HearthShow)
+            {
+                spriteBatch.Draw(HearthTexture,new Rectangle((int)CharacterPos.X,(int)CharacterPos.Y+15,25,25),Color.White);
+            }
+            if (CoinShow)
+            {
+                spriteBatch.Draw(CoinTexture, new Rectangle((int)CharacterPos.X, (int)CharacterPos.Y + 15, 25, 25), Color.White);
+            }
+            spriteBatch.DrawString(ClockFonts,Hours.ToString()+" : "+Minutes.ToString()+" : "+Secconds.ToString(),new Vector2(1200,5), Color.White);
+            if(RainIsComings) spriteBatch.DrawString(ClockFonts, "Rain is Coming in 10 secs For " + LenghtRain.ToString() + " Secs.", new Vector2(300, 5), Color.Black);
         }
 
 

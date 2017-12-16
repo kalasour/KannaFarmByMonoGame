@@ -33,8 +33,8 @@ namespace KannaFarmByMonoGame
             ButtonImage = Content.Load<Texture2D>("BtnStart");
             ButtonExit = Content.Load<Texture2D>("BtnExit");
             Cloud = Content.Load<Texture2D>("cloud_1");
-            BtnStart = new SpriteButton(ButtonImage, new Vector2(200, 100), new Vector2(ScreenSize.X / 2 - 25-200, ScreenSize.Y / 2 - 50), ScreenSize, 2);
-            BtnExit = new SpriteButton(ButtonExit, new Vector2(200, 100), new Vector2(ScreenSize.X / 2 - 25+200, ScreenSize.Y / 2 - 50), ScreenSize, 0);
+            BtnStart = new SpriteButton(ButtonImage, new Vector2(200, 100), new Vector2(ScreenSize.X / 2 - 25-200, ScreenSize.Y / 2 - 50), ScreenSize, 2,Content);
+            BtnExit = new SpriteButton(ButtonExit, new Vector2(200, 100), new Vector2(ScreenSize.X / 2 - 25+200, ScreenSize.Y / 2 - 50), ScreenSize, 0,Content);
             CloudPosX[0] = (int)CloudPos.X;
             CloudPosX[1] = 300 + (int)CloudPos.X;
             CloudPosX[2] = 100 + (int)CloudPos.X;

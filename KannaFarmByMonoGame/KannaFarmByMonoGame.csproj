@@ -53,7 +53,6 @@
     <Compile Include="SpriteAnimations.cs" />
     <Compile Include="SpriteButton.cs" />
     <Compile Include="TileMapDraw.cs" />
-    <Compile Include="YesOrNo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

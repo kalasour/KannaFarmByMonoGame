@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace KannaFarmByMonoGame
 {
@@ -9,6 +11,7 @@ namespace KannaFarmByMonoGame
     /// </summary>
     public class Game1 : Game
     {
+        
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public Vector2 ScreenSize = new Vector2(1360, 768);
@@ -22,7 +25,7 @@ namespace KannaFarmByMonoGame
         BackgroundScreen BackgroundScreen;
         private MenuSence menuSence;
         private OverSence overSence;
-        
+        private Song SoundBG;
 
         public Game1()
         {
@@ -60,6 +63,11 @@ namespace KannaFarmByMonoGame
         {
             cursor = Content.Load<Texture2D>("Cursor");
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            SoundBG = Content.Load<Song>("BGSound");
+            MediaPlayer.Volume = 1f;
+            MediaPlayer.Play(SoundBG);
+            MediaPlayer.IsRepeating = true;
+            
             // TODO: use this.Content to load your game content here
         }
 
@@ -137,18 +145,22 @@ namespace KannaFarmByMonoGame
                 case 1:
                     BackgroundScreen.Draw(spriteBatch);
                     BackgroundScreen.Update(gameTime);
+                    MediaPlayer.Volume = 1f;
                     break;
                 case 2:
+                    MediaPlayer.Volume = 0.4f;
                     gamePlaySence.Draw(spriteBatch);
                     gamePlaySence.Update(gameTime);
                     break;
                 case 3:
                     showMouse = true;
+                    MediaPlayer.Volume = 1f;
                     menuSence.Draw(spriteBatch);
                     menuSence.Update(gameTime);
                     break;
                 case 4:
                     showMouse = true;
+                    MediaPlayer.Volume = 1f;
                     overSence.Draw(spriteBatch);
                     overSence.Update(gameTime);
                     break;
