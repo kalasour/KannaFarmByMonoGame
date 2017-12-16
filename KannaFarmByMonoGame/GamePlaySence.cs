@@ -306,6 +306,7 @@ namespace KannaFarmByMonoGame
                 {
                     isStarter = false;
                     AmountPlants[0] = 9;
+                    isHelp = true;
                 }
             }
             if (PercentHealth >= 100) PercentHealth = 100;
