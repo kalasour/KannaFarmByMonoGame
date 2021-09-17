@@ -529,6 +529,7 @@ namespace KannaFarmByMonoGame
             LandLayer.Update(gameTime,posMap);
             LandLayer2.Update(gameTime, posMap);
             PlantsLayer.Update(gameTime,posMap);
+            
             if (Keyboard.GetState().IsKeyDown(Keys.D1))
             {
                 GrowPlants(1);
